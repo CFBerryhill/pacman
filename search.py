@@ -56,6 +56,9 @@ class SearchProblem:
      """
      util.raiseNotDefined()
            
+class Node:
+    #knows its parents (tuple)
+    #knows itself
 
 def tinyMazeSearch(problem):
   """
@@ -86,24 +89,40 @@ def depthFirstSearch(problem):
   print "Is the start a goal?", problem.isGoalState(problem.getStartState())
   print "Start's successors:", problem.getSuccessors(problem.getStartState())
   #initialize frontier and explored
-  frontier = util.Stack()
-  successors = problem.getSuccessors(problem.getStartState())
+  frontier = util.Stack() #initilize frontier structure
+  successors = problem.getSuccessors(problem.getStartState()) #successor states ((x,y), 'N/S/E/W', 1) / (pos, act, cost)
   for s in successors:
-      frontier.push(s)
+      frontier.push(s) #add successors to frontier
 
-  explored = {problem.getStartState : True }
+  explored = {problem.getStartState : True} #initilize explored dictionary
 
-  solution = util.Stack()
+  solution = util.Stack() #solution?
 
   while not frontier.isEmpty(): #while frontier not empty
       print "frontier: ", frontier.list
       node = frontier.pop()      # choose a leaf node and remove it from the frontier
+      solution.push(node)
+      print "solution so far: ", solution.list
       if problem.isGoalState(node):  # if the node contains a goal state
+          #get rid of extraneous info
           return solution # return list of actions from start state to goal state
       explored[node[0]] = True # add the state key to the explored dictionary
-      solution.push(node[1])
-      print "solution so far: ", solution.list
       successors = problem.getSuccessors(node)
+      # if len(successors) == 0:
+      #     foo = solution.pop()
+      #     if foo[1] is 'North':
+      #         newcord = foo[0] + (0,-1)
+      #         frontier.push(newcord)
+      #     elif foo[1] is 'East':
+      #         newcord = foo[0] + (-1, 0)
+      #         frontier.push(newcord)
+      #     elif foo[1] is 'South':
+      #         newcord = foo[0] + (0, 1)
+      #         frontier.push(newcord)
+      #     elif foo[1] is 'West':
+      #         newcord = foo[0] + (1, 0)
+      #         frontier.push(newcord)
+
       for s in successors: # for each successor of the node state
           if not explored[s[0]] is True:
               frontier.push(s) #if the key of the successor state is not in explored add node of the successor onto the frontier
