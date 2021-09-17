@@ -57,8 +57,13 @@ class SearchProblem:
      util.raiseNotDefined()
            
 class Node:
-    #knows its parents (tuple)
-    #knows itself
+
+   #knows its parents (tuple)
+   #knows itself
+   def __init__(self, state, parent):
+       self.state = state
+       self.parent = parent
+       self.children = None
 
 def tinyMazeSearch(problem):
   """
@@ -89,8 +94,9 @@ def depthFirstSearch(problem):
   print "Is the start a goal?", problem.isGoalState(problem.getStartState())
   print "Start's successors:", problem.getSuccessors(problem.getStartState())
   #initialize frontier and explored
+  root = Node(problem.getSuccessors(problem.getStartState()), None)
   frontier = util.Stack() #initilize frontier structure
-  successors = problem.getSuccessors(problem.getStartState()) #successor states ((x,y), 'N/S/E/W', 1) / (pos, act, cost)
+  successors = problem.getSuccessors(root.state) #successor states ((x,y), 'N/S/E/W', 1) / (pos, act, cost)
   for s in successors:
       frontier.push(s) #add successors to frontier
 
