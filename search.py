@@ -113,20 +113,22 @@ def depthFirstSearch(problem):
     #START DFS
     while not frontier.isEmpty():  # while frontier not empty
         node = frontier.pop()  # choose a leaf node and remove it from the frontier
-        if problem.isGoalState(node):  # if the node contains a goal state
+        if problem.isGoalState(node.state):  # if the node contains a goal state
+            print "solution found"
             # build solution
-            solution = util.Stack()  # solution?
+            solution = [] # solution?
             temp = node
             while not temp.parent is None:
-                solution.push(temp.act)
+                solution.insert(0, temp.action)
                 temp = temp.parent
-            return solution  # return list of actions from start state to goal state
+            return solution # return list of actions from start state to goal state
         explored[node.state] = True  # add the state key to the explored dictionary
         successors = problem.getSuccessors(node.state)
         for s in successors:  # for each successor of the node state
             if not s[0] in explored.keys():
                 node_s = Node(s[0], s[1], node)
                 frontier.push(node_s)  # add successors to frontier
+    print "no solution found"
     return []  # return an empty list if frontier is empty
 
 
