@@ -62,11 +62,12 @@ class Node:
 
     # knows its parents (tuple)
     # knows itself
-    def __init__(self, state, action, parent):
+    def __init__(self, state, action, parent, cost):
         self.state = state
         self.action = action
         self.parent = parent
         self.children = None
+        self.cost = cost
 
 
 def tinyMazeSearch(problem):
@@ -95,16 +96,14 @@ def depthFirstSearch(problem):
   print "Start's successors:", problem.getSuccessors(problem.getStartState())
   """
     "*** YOUR CODE HERE ***"
-    print "Start:", problem.getStartState()
-    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-    print "Start's successors:", problem.getSuccessors(problem.getStartState())
     # initialize frontier and explored
     start_state = problem.getStartState()
-    root = Node(start_state, None, None)
+    root = Node(start_state, None, None,0)
+    #root.cost = 0
     frontier = util.Stack()  # initilize frontier structure
     successors = problem.getSuccessors(root.state)  # successor states ((x,y), 'N/S/E/W', 1) / (pos, act, cost)
     for s in successors:
-        node_s = Node(s[0], s[1], root)
+        node_s = Node(s[0], s[1], root, root.cost + 1)
         frontier.push(node_s)  # add successors to frontier
 
     explored = {problem.getStartState: True}  # initilize explored dictionary
@@ -126,7 +125,7 @@ def depthFirstSearch(problem):
         successors = problem.getSuccessors(node.state)
         for s in successors:  # for each successor of the node state
             if not s[0] in explored.keys():
-                node_s = Node(s[0], s[1], node)
+                node_s = Node(s[0], s[1], node, node.cost + 1)
                 frontier.push(node_s)  # add successors to frontier
     print "no solution found"
     return []  # return an empty list if frontier is empty
@@ -135,7 +134,37 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     "Search the shallowest nodes in the search tree first. [p 74]"
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    start_state = problem.getStartState()
+    root = Node(start_state, None, None, 0)
+    #root.cost = 0
+    frontier = util.Queue()  # initilize frontier structure
+    successors = problem.getSuccessors(root.state)  # successor states ((x,y), 'N/S/E/W', 1) / (pos, act, cost)
+    for s in successors:
+        node_s = Node(s[0], s[1], root, root.cost + 1)
+        frontier.push(node_s)  # add successors to frontier
+
+    explored = {problem.getStartState: True}  # initilize explored dictionary
+
+    # START DFS
+    while not frontier.isEmpty():  # while frontier not empty
+        node = frontier.pop()  # choose a leaf node and remove it from the frontier
+        if problem.isGoalState(node.state):  # if the node contains a goal state
+            print "solution found"
+            # build solution
+            solution = []  # solution?
+            temp = node
+            while not temp.parent is None:
+                solution.insert(0, temp.action)
+                temp = temp.parent
+            return solution  # return list of actions from start state to goal state
+        explored[node.state] = True  # add the state key to the explored dictionary
+        successors = problem.getSuccessors(node.state)
+        for s in successors:  # for each successor of the node state
+            if not s[0] in explored.keys():
+                node_s = Node(s[0], s[1], node, node.cost + 1)
+                frontier.push(node_s)  # add successors to frontier
+    print "no solution found"
+    return []  # return an empty list if frontier is empty
 
 
 def uniformCostSearch(problem):
