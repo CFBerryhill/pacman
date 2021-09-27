@@ -195,16 +195,16 @@ def nullHeuristic(state, problem=None):
     return 0
 
 
-def aStarSearch(problem, heuristic=nullHeuristic):
+def aStarSearch(problem, heuristic):
     "Search the node that has the lowest combined cost and heuristic first."
     "*** YOUR CODE HERE ***"
     start_state = problem.getStartState()
     root = Node(start_state, None, None, 0)
-    frontier = util.PriorityQueueWithFunction(heuristic)
+    frontier = util.PriorityQueue()
     successors = problem.getSuccessors(root.state)  # successor states ((x,y), 'N/S/E/W', 1) / (pos, act, cost)
     for s in successors:
         node_s = Node(s[0], s[1], root, root.cost + 1)
-        frontier.push(node_s)
+        frontier.push(node_s, heuristic(node_s.state, problem))
 
     explored = {problem.getStartState: True}  # initilize explored dictionary
     while not frontier.isEmpty():
@@ -217,7 +217,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         for s in successors:  # for each successor of the node state
             if not s[0] in explored.keys():
                 node_s = Node(s[0], s[1], node, node.cost + 1)
-                frontier.push(node_s)  # add successors to frontier
+                frontier.push(node_s, heuristic(node_s.state, problem))  # add successors to frontier
     print "no solution found"
     return []  # return an empty list if frontier is empty
 
