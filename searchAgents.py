@@ -422,7 +422,7 @@ def foodHeuristic(state, problem):
   your heuristic is *not* consistent, and probably not admissible!  On the other hand,
   inadmissible or inconsistent heuristics may find optimal solutions, so be careful.
   
-  The state is a tuple ( pacmanPosition, foodGrid ) where foodGrid is a 
+  The state is a tuple ( pacmanPosition, foodGrid ) where foodGrid is a
   Grid (see game.py) of either True or False. You can call foodGrid.asList()
   to get a list of food coordinates instead.
   
@@ -437,8 +437,7 @@ def foodHeuristic(state, problem):
   """
   position, foodGrid = state
   "*** YOUR CODE HERE ***"
-  foodlist = foodGrid.asList
-  return 0 #len(foodlist)
+  return len(foodGrid.asList())
   
 class ClosestDotSearchAgent(SearchAgent):
   "Search for all food using a sequence of searches"
