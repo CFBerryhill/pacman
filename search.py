@@ -202,8 +202,9 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     frontier = util.PriorityQueue()
     successors = problem.getSuccessors(root.state)  # successor states ((x,y), 'N/S/E/W', 1) - (pos, act, cost)
     for s in successors:
+        h_of_s = heuristic(s[0], problem)
         node_s = Node(s[0], s[1], root, root.cost + 1)
-        frontier.push(node_s, heuristic(s[0], problem))
+        frontier.push(node_s, node_s.cost + h_of_s)
 
     explored = {problem.getStartState: True}  # initilize explored dictionary
     while not frontier.isEmpty():
@@ -215,8 +216,9 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         successors = problem.getSuccessors(node.state)
         for s in successors:  # for each successor of the node state
             if not s[0] in explored.keys():
+                h_of_s = heuristic(s[0], problem)
                 node_s = Node(s[0], s[1], node, node.cost + 1)
-                frontier.push(node_s, heuristic(s[0], problem))  # add successors to frontier
+                frontier.push(node_s, node_s.cost + h_of_s)  # add successors to frontier
     print "no solution found"
     return []  # return an empty list if frontier is empty
 
